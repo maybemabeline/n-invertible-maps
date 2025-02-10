@@ -1,0 +1,134 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\id}{\mathrm{id}}
+\newcommand{\Id}{\mathrm{Id}}
+\newcommand{\inverse}{\mathrm{inverse}}
+\newcommand{\isequiv}{\mathrm{equiv}}
+\newcommand{\pr}{\mathrm{pr}}
+\newcommand{\refl}{\mathrm{refl}}
+\newcommand{\sphere}{S^{2}}
+\newcommand{\U}{\mathcal{U}}
+
+\DeclareMathOperator{\inv}{Inv}
+
+
+\begin{document}
+
+
+\begin{proposition}
+  \label{universal-property-sphere}
+  For all types \(A\), the type \(\sphere \to A\) is equal to
+  \[\sum_{x : A} \refl_{x} = \refl_{x}.\]
+\end{proposition}
+\begin{proposition}
+  \label{family-over-subtype}
+  Suppose that \(A\) is a type, \(B\) a family of types over \(A\) and \(P\) a family of mere
+  propositions over \(A\), such that we have a family of functions \(B(x) \to P(x)\) for all
+  \(x : A\). We then have an equality of types
+  \[\sum_{x : A}B(x) = \sum \Bigl(t : \sum_{x : A}P(x)\Bigr) B(\pr_{1}t).\]
+\end{proposition}
+
+A function \(f\) is said to be \emph{invertible}
+if it admits a two-sided inverse.
+We define the type of invertibility proofs of \(f\) to be the type
+\[\inverse(f) \coloneq \sum_{g : B \to A}(f \circ g = \id) \times (g \circ f = \id)\]
+and denote the type of all invertible maps between two types \(A\) and \(B\) by
+\(\inv(A, B) \coloneq \sum_{f : A \to B}\inverse(f)\).
+
+A function \(f\) is said to be an \emph{equivalence} if it admits both a left and a
+right sided inverse.
+We define the type of equivalence proofs of \(f\) to be the type
+\[\isequiv(f) \coloneq \sum_{g : B \to A}(f \circ g = \id) \times
+  \sum_{h : B \to A}(h \circ f = \id)\]
+and similarly denote the type of all equivalences between two types \(A\) and \(B\)
+by~\(A \simeq B\).
+
+
+We recall the following two important facts:
+\begin{proposition}
+  \label{is-prop-equiv}
+  For all functions \(f\), the type of equivalence proofs of \(f\) is a mere proposition.
+\end{proposition}
+
+\begin{proposition}
+  \label{inv-implies-equiv}
+  For all functions \(f\), the types of invertibility and equivalence proofs of f are
+  logically equivalent. In other words, a function is invertible if and only if it is
+  an equivalence.
+\end{proposition}
+
+\begin{lemma}
+  \label{inv-id}
+  Suppose \(A\) is a type. The type of invertibility proofs of \(\id_{A}\) is equal
+  to \(\id_{A} = \id_{A}\).
+\end{lemma}
+
+\begin{proof}
+  By reassociating the dependent sum type, we see that the type of invertibility proofs of
+  \(\id_{A}\) is equal to
+  \[\sum \Bigl(G : \hspace{-6pt} \sum_{g : A \to A} \left(g = \id_{A}\right)\Bigr)
+    \left( \pr_{1}G = \id_{A}\right).\]
+  Since the type \(\sum_{g : A \to A}\left(g = \id_{A}\right)\) is contractible onto
+  \(\left(\id_{A}, \refl\right)\), we see the whole type is equal to
+  \(\pr_{1}\left(\id_{A}, \refl\right) = \id_{A}\), which is itself equal to
+  \(\id_{A} = \id_{A}\).
+\end{proof}
+
+\pagebreak
+
+\begin{proposition}
+  \label{inv-is-looped-equiv}
+  The type \(\inv(A, B)\) is equal to the type \(\sum_{e : A \simeq B} \pr_{1}e = \pr_{1}e\)
+  for all types \(A\) and \(B\).
+\end{proposition}
+
+\begin{proof}
+  We first view \(\inverse\) and \(\isequiv\) as two families of types over \(A \to B\).
+  Proposition \ref{is-prop-equiv} then tells us that \(\isequiv\) is a family
+  of mere propositions over \(A \to B\) whereas proposition \ref{inv-implies-equiv} in
+  particular tells us that we have a family of functions \(\inverse(f) \to \isequiv(f)\) for
+  all functions \(f : A \to B\). By proposition~\ref{family-over-subtype}, it then follows
+  that the type \(\inv(A, B)\) is equal to the type
+  \(\sum_{e : A \simeq B} \inverse(\pr_{1}e)\).
+
+  To construct the desired equality, it thus suffices to construct an equality between the
+  types \(\sum_{e : A \simeq B} \inverse(\pr_{1}e)\) and
+  \(\sum_{e : A \simeq B} \pr_{1}e = \pr_{1}e\). By the fiberwise
+  equivalence construction, it further suffices to construct an equality between
+  \(\inverse(\pr_{1}e)\) and \(\pr_{1}e = \pr_{1}e\) for all equivalences \(e : A \simeq B\).
+  The result then follows by equivalence induction and Lemma \ref{inv-id}.
+\end{proof}
+
+\begin{theorem}
+  The type \(\sum_{A, B : \U}\inv(A, B)\) is equal to the type \(\sphere \to \U\).
+\end{theorem}
+
+\begin{proof}
+  We first quantify the equality in Proposition
+  \ref{inv-is-looped-equiv} over \(B : \U\), obtaining an equality between
+  \(\sum_{B : \U}\inv(A, B)\) and \(\sum_{B : \U}\sum_{e : A \simeq B}\pr_{1}e = \pr_{1}e\).
+  Now, since the type \(\sum_{B : \U}A \simeq B\) is contractible onto
+  \(\left(A, \Id_{A}\right)\), the second type is equal to \(\id_{A} = \id_{A}\), which is
+  itself equal to \(\refl_{A} = \refl_{A}\) by univalence. Now quantifying this equality
+  over \(A : \U\), we obtain an equality between \(\sum_{A, B : \U}\inv(A, B)\) and
+  \(\sum_{A : \U}\refl_{A} = \refl_{A}\), which is equal to \(\sphere \to \U\) by the
+  universal property of the sphere.
+\end{proof}
+\end{document}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: t
+%%% End:
