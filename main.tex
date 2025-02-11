@@ -13,6 +13,9 @@
 \theoremstyle{definition}
 \newtheorem{definition}[theorem]{Definition}
 
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\Id}{\mathrm{Id}}
 \newcommand{\isequiv}{\mathrm{equiv}}
@@ -25,6 +28,7 @@
 
 \DeclareMathOperator{\inv}{Inv}
 \DeclareMathOperator{\inverse}{inverse}
+\DeclareMathOperator{\adj}{Adj}
 
 \newcommand{\ninverse}[1]{\inverse_{#1}}
 
@@ -147,13 +151,23 @@ We recall the following two important facts:
   Let \(f : A \to B\) be a function. We say that \(f\) is
   \(0\)-invertible if there exists a function \(g : B \to A\).
   We say that \(f\) is \((n + 1)\)-invertible if there exist functions \(g : B \to A\) and
-  \[r : \prod_{x : A}\prod_{y : B}f x = y \to x = g y,\]
+  \[r : \prod_{x : A}\prod_{y : B}(f x = y) \to (x = g y),\]
   such that \(r(x, y)\) is \(n\)-invertible for all \(x\) and \(y\).
 
+  We thus define the type of \((n + 1)\)-inverses to be
   \[\ninverse{n + 1}(f) =
-    \sum_{g : B \to A}\sum \Bigl(r : \prod_{x : A}\prod_{y : B}f x = y \to x = g y\Bigr)
-    \prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)).\]
+    \sum_{g : B \to A}\sum_{r : \adj(f, g)}
+    \prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)),\]
+  where \(\adj(f, g) = \prod_{x : A}\prod_{y : B}(f x = y) \to (x = g y)\).
 \end{definition}
+
+\begin{remark}
+  We note that \(1\)-invertibility coincides with the ordinary notion of invertibility.
+  By path induction, the data of a \(1\)-invertible function \(f : A \to B\)
+  consists exactly of a function \(g : B \to A\), together with homotopies of type
+  \(\prod_{x : A} x = g(f x)\) and \(\prod_{y : B} f(g y) = y\), witnessing
+  that \(f\) is invertible.
+\end{remark}
 
 \begin{lemma}
   The type \(\ninverse{n + 1}(\id_{A})\) is equal to
@@ -196,7 +210,7 @@ We recall the following two important facts:
   For the inductive step,
   suppose \(f : A \to B\) is \((n + 2)\)-invertible. We then have a function
   \(g : B \to A\) and a certain dependent function \(r\), such that \(r(x, y)\) is
-  \(n + 1\)-invertible for all \(x, y : A\). By the inductive hypothesis, \(r(x, y)\) is
+  \((n + 1)\)-invertible for all \(x, y : A\). By the inductive hypothesis, \(r(x, y)\) is
   \(n\)-invertible for all \(x, y : A\), showing that \(f\) is \((n + 1)\)-invertible.
 \end{proof}
 
@@ -210,6 +224,13 @@ We recall the following two important facts:
   \(1\)-invertible. Since \(1\)-invertibility coincides with invertibility, this shows that
   it is also an equivalence.
 \end{proof}
+
+\begin{theorem}
+  Let \(\U\) be a universe and \(A : \U\) a type. The type
+  \[\sum_{B : \U}\sum_{f : A \to B}\inverse_{n + 1}(f)\] of all \((n + 1)\)-invertible maps
+  with domain \(A\) is equal to
+  \(\lspace{n + 2}(\U, A)\).
+\end{theorem}
 \end{document}
 
 %%% Local Variables:
