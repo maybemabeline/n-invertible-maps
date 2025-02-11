@@ -4,28 +4,34 @@
 \usepackage{amsfonts}
 \usepackage{amsthm}
 
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}
-
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
 
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\Id}{\mathrm{Id}}
-\newcommand{\inverse}{\mathrm{inverse}}
 \newcommand{\isequiv}{\mathrm{equiv}}
 \newcommand{\pr}{\mathrm{pr}}
 \newcommand{\refl}{\mathrm{refl}}
 \newcommand{\sphere}{S^{2}}
 \newcommand{\U}{\mathcal{U}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\lspace}[1]{\Omega^{#1}}
 
 \DeclareMathOperator{\inv}{Inv}
+\DeclareMathOperator{\inverse}{inverse}
 
+\newcommand{\ninverse}[1]{\inverse_{#1}}
 
 \begin{document}
 
+
+\section{Basic construction}
 
 \begin{proposition}
   \label{universal-property-sphere}
@@ -132,6 +138,77 @@ We recall the following two important facts:
   over \(A : \U\), we obtain an equality between \(\sum_{A, B : \U}\inv(A, B)\) and
   \(\sum_{A : \U}\refl_{A} = \refl_{A}\), which is equal to \(\sphere \to \U\) by the
   universal property of the sphere.
+\end{proof}
+
+\section{\(n\)-invertible functions}
+
+\begin{definition}
+  We define a notion of \(n\)-invertibility on \(A \to B\) by induction on~\(n\).
+  Let \(f : A \to B\) be a function. We say that \(f\) is
+  \(0\)-invertible if there exists a function \(g : B \to A\).
+  We say that \(f\) is \((n + 1)\)-invertible if there exist functions \(g : B \to A\) and
+  \[r : \prod_{x : A}\prod_{y : B}f x = y \to x = g y,\]
+  such that \(r(x, y)\) is \(n\)-invertible for all \(x\) and \(y\).
+
+  \[\ninverse{n + 1}(f) =
+    \sum_{g : B \to A}\sum \Bigl(r : \prod_{x : A}\prod_{y : B}f x = y \to x = g y\Bigr)
+    \prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)).\]
+\end{definition}
+
+\begin{lemma}
+  The type \(\ninverse{n + 1}(\id_{A})\) is equal to
+  \[\prod_{x, y : A}\ninverse{n}(\id_{x = y})\]
+  for all \(n : \N\).
+\end{lemma}
+
+\begin{proposition}
+  The type \(\ninverse{n + 1}(\id_{A})\) is equal to \(\prod_{x : A}\lspace{n + 1}(A, x)\)
+  for all~\(n : \N\).
+\end{proposition}
+
+\begin{proof}
+  We prove the result by induction on \(n\). We make use of the previous lemma in both cases.
+  For the base case, we have
+  \begin{align*}
+    \ninverse{1}(\id_{A}) &= \prod_{x, y : A}\ninverse{0}(\id_{x = y}) =
+                              \prod_{x, y : A} (x = y) \to (x = y) = \\
+                            &= \prod_{x : A} (x = x) = \prod_{x : A} \lspace{1}(A, x).
+  \end{align*}
+  For the inductive step, we have
+  \begin{align*}
+    \ninverse{n + 2}{(\id_{A})} &= \prod_{x, y : A}\ninverse{n + 1}(\id_{x = y}) =
+                                  \prod_{x, y : A}\prod_{p : x = y}\lspace{n + 1}(x = y, p) \\
+                                &= \prod_{x : A} \lspace{n + 1}(x = x, \refl_{x}) =
+                                  \prod_{x : A}\lspace{n + 2}(A, x).
+  \end{align*}
+\end{proof}
+
+\begin{proposition}
+  Let \(n : \N\) and suppose \(f : A \to B\) is \((n + 1)\)-invertible.
+  Then \(f\) is \(n\)-invertible.
+\end{proposition}
+
+\begin{proof}
+  We again prove the result by induction on \(n\). For the base case, suppose \(f : A \to B\)
+  is \(1\)-invertible. We then have a function \(g : B \to A\) together with some data,
+  but \(g\) itself is enough to show that \(f\) is \(0\)-invertible.
+
+  For the inductive step,
+  suppose \(f : A \to B\) is \((n + 2)\)-invertible. We then have a function
+  \(g : B \to A\) and a certain dependent function \(r\), such that \(r(x, y)\) is
+  \(n + 1\)-invertible for all \(x, y : A\). By the inductive hypothesis, \(r(x, y)\) is
+  \(n\)-invertible for all \(x, y : A\), showing that \(f\) is \((n + 1)\)-invertible.
+\end{proof}
+
+\begin{corollary}
+  Let \(n : \N\) and suppose \(f : A \to B\) is \((n + 1)\)-invertible. Then \(f\) is an
+  equivalence.
+\end{corollary}
+
+\begin{proof}
+  Using the previous proposition, we can show that every \((n + 1)\)-invertible function is
+  \(1\)-invertible. Since \(1\)-invertibility coincides with invertibility, this shows that
+  it is also an equivalence.
 \end{proof}
 \end{document}
 
