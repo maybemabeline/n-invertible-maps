@@ -90,18 +90,25 @@ We recall the following two important facts:
 
 \begin{proposition}
   \label{inv-is-looped-equiv}
-  The type \(\inv(A, B)\) is equal to the type \(\sum_{e : A \simeq B} \pr_{1}e = \pr_{1}e\)
+  The type \(\inv(A, B)\) is equal to the type \(\sum_{e : A = B} e = e\)
   for all types \(A\) and \(B\).
 \end{proposition}
 
 \begin{proof}
-  We first view \(\inverse\) and \(\isequiv\) as two families of types over \(A \to B\).
+  We view \(\inverse\) and \(\isequiv\) as two families of types over \(A \to B\).
   Proposition \ref{is-prop-equiv} then tells us that \(\isequiv\) is a family
-  of mere propositions over \(A \to B\) whereas proposition \ref{inv-implies-equiv} in
+  of mere propositions over \(A \to B\), whereas proposition \ref{inv-implies-equiv} in
   particular tells us that we have a family of functions \(\inverse(f) \to \isequiv(f)\) for
   all functions \(f : A \to B\). By proposition~\ref{family-over-subtype}, it then follows
   that the type \(\inv(A, B)\) is equal to the type
   \(\sum_{e : A \simeq B} \inverse(\pr_{1}e)\).
+
+  On the other hand, we first observe that the type \(\sum_{e : A = B} e = e\) is equal to the
+  type \(\sum_{e : A \simeq B} e = e\) by univalence. Now, since \(\isequiv\)
+  is a family of mere propositions, \(A \simeq B\) is
+  a subtype of \(A \to B\). By the subtype identity principle, it follows that the type
+  \(e = e\) is equal to the type \(\pr_{1}e = \pr_{1}e\) for all equivalences
+  \(e : A \simeq B\).
 
   To construct the desired equality, it thus suffices to construct an equality between the
   types \(\sum_{e : A \simeq B} \inverse(\pr_{1}e)\) and
@@ -118,10 +125,10 @@ We recall the following two important facts:
 \begin{proof}
   We first quantify the equality in Proposition
   \ref{inv-is-looped-equiv} over \(B : \U\), obtaining an equality between
-  \(\sum_{B : \U}\inv(A, B)\) and \(\sum_{B : \U}\sum_{e : A \simeq B}\pr_{1}e = \pr_{1}e\).
-  Now, since the type \(\sum_{B : \U}A \simeq B\) is contractible onto
-  \(\left(A, \Id_{A}\right)\), the second type is equal to \(\id_{A} = \id_{A}\), which is
-  itself equal to \(\refl_{A} = \refl_{A}\) by univalence. Now quantifying this equality
+  \(\sum_{B : \U}\inv(A, B)\) and \(\sum_{B : \U}\sum_{e : A = B}e = e\).
+  Since the type \(\sum_{B : \U}A = B\) is contractible onto
+  \(\left(A, \refl_{A}\right)\), the second type is equal to
+  \(\refl_{A} = \refl_{A}\). Now quantifying
   over \(A : \U\), we obtain an equality between \(\sum_{A, B : \U}\inv(A, B)\) and
   \(\sum_{A : \U}\refl_{A} = \refl_{A}\), which is equal to \(\sphere \to \U\) by the
   universal property of the sphere.
