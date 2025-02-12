@@ -21,7 +21,8 @@
 \newcommand{\isequiv}{\mathrm{equiv}}
 \newcommand{\pr}{\mathrm{pr}}
 \newcommand{\refl}{\mathrm{refl}}
-\newcommand{\sphere}{S^{2}}
+\newcommand{\nsphere}[1]{\mathbb{S}^{#1}}
+\newcommand{\sphere}{\nsphere{2}}
 \newcommand{\U}{\mathcal{U}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\lspace}[1]{\Omega^{#1}}
@@ -144,28 +145,28 @@ We recall the following two important facts:
   universal property of the sphere.
 \end{proof}
 
-\section{\(n\)-invertible functions}
+\section{\(n\)-invertible maps}
 
 \begin{definition}
   We define a notion of \(n\)-invertibility on \(A \to B\) by induction on~\(n\).
   Let \(f : A \to B\) be a function. We say that \(f\) is
   \(0\)-invertible if there exists a function \(g : B \to A\).
   We say that \(f\) is \((n + 1)\)-invertible if there exist functions \(g : B \to A\) and
-  \[r : \prod_{x : A}\prod_{y : B}(f x = y) \to (x = g y),\]
+  \[r : \prod_{x : A}\prod_{y : B}(f(x) = y) \to (x = g(y)),\]
   such that \(r(x, y)\) is \(n\)-invertible for all \(x\) and \(y\).
 
   We thus define the type of \((n + 1)\)-inverses to be
   \[\ninverse{n + 1}(f) =
     \sum_{g : B \to A}\sum_{r : \adj(f, g)}
     \prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)),\]
-  where \(\adj(f, g) = \prod_{x : A}\prod_{y : B}(f x = y) \to (x = g y)\).
+  where \(\adj(f, g) = \prod_{x : A}\prod_{y : B}(f(x) = y) \to (x = g(y))\).
 \end{definition}
 
 \begin{remark}
   We note that \(1\)-invertibility coincides with the ordinary notion of invertibility.
   By path induction, the data of a \(1\)-invertible function \(f : A \to B\)
   consists exactly of a function \(g : B \to A\), together with homotopies of type
-  \(\prod_{x : A} x = g(f x)\) and \(\prod_{y : B} f(g y) = y\), witnessing
+  \(\prod_{x : A} x = g(f(x))\) and \(\prod_{y : B} f(g(y)) = y\), witnessing
   that \(f\) is invertible.
 \end{remark}
 
@@ -175,7 +176,12 @@ We recall the following two important facts:
   for all \(n : \N\).
 \end{lemma}
 
+\begin{proof}
+  TODO
+\end{proof}
+
 \begin{proposition}
+  \label{ninv-id}
   The type \(\ninverse{n + 1}(\id_{A})\) is equal to \(\prod_{x : A}\lspace{n + 1}(A, x)\)
   for all~\(n : \N\).
 \end{proposition}
@@ -198,6 +204,7 @@ We recall the following two important facts:
 \end{proof}
 
 \begin{proposition}
+  \label{inverse-system}
   Let \(n : \N\) and suppose \(f : A \to B\) is \((n + 1)\)-invertible.
   Then \(f\) is \(n\)-invertible.
 \end{proposition}
@@ -226,11 +233,49 @@ We recall the following two important facts:
 \end{proof}
 
 \begin{theorem}
+  \label{ninv-maps-with-domain}
   Let \(\U\) be a universe and \(A : \U\) a type. The type
   \[\sum_{B : \U}\sum_{f : A \to B}\inverse_{n + 1}(f)\] of all \((n + 1)\)-invertible maps
   with domain \(A\) is equal to
   \(\lspace{n + 2}(\U, A)\).
 \end{theorem}
+
+\begin{proof}
+  Let \(B : \U\) first be a type. Since \((n + 1)\)-invertibility implies equivalence and
+  equivalence is a mere proposition, we have
+  \[\sum_{f : A \to B}\ninverse{n + 1}(f) = \sum_{f : A \simeq B}\ninverse{n + 1}(\pr_{1}f).\]
+  Then, since the type \(\sum_{B : \U}{A \simeq B}\) is contractible, it follows that
+  \[\sum_{B : \U}\sum_{f : A \simeq B}\ninverse{n + 1}(\pr_{1}f) =
+    \ninverse{n + 1}{(\id_{A})}.\]
+  By proposition \ref{ninv-id}, the second type is equal to
+  \(\prod_{x : A}\lspace{n + 1}(A, x)\). Finally, since dependent products commute with loop
+  spaces, we have
+  \[\prod_{x : A}\lspace{n + 1}(A, x) = \lspace{n + 2}(\U, A).\]
+  TODO : why exactly is the final claim true?
+\end{proof}
+
+\begin{corollary}
+  Let \(\U\) be a universe. The type
+  \(\sum_{A, B : \U}\sum_{f : A \to B}\ninverse{n + 1}(f)\) is equal to
+  \(\nsphere{n + 2} \to \U\).
+\end{corollary}
+
+\begin{proof}
+  Obtained by quantifying the equality in Theorem \ref{ninv-maps-with-domain} over \(A\)
+  and noting
+  that \(\sum_{A : \U}\lspace{n + 2}(\U, A) = \nsphere{n + 2} \to \U\) by the universal
+  property of the sphere.
+\end{proof}
+
+\section{\(\infty\)-invertible maps}
+
+Consider the inverse system \(\phi_{n} : \ninverse{n + 1}(f) \to \ninverse{n}(f)\) defined
+in Proposition \ref{inverse-system}. We may explicitly define the \(\phi_{n}\) to be
+\begin{align*}
+  \phi_{0}(g, r, H)     &= g \\
+  \phi_{n + 1}(g, r, H) &= (g, r, \lambda x.\lambda y.\phi_{n}(H(x, y))).
+\end{align*}
+
 \end{document}
 
 %%% Local Variables:
