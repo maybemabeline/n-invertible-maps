@@ -269,12 +269,36 @@ We recall the following two important facts:
 
 \section{\(\infty\)-invertible maps}
 
-Consider the inverse system \(\phi_{n} : \ninverse{n + 1}(f) \to \ninverse{n}(f)\) defined
+Consider the diagram \(\phi_{n} : \ninverse{n + 1}(f) \to \ninverse{n}(f)\) defined
 in Proposition \ref{inverse-system}. We may explicitly define the \(\phi_{n}\) to be
 \begin{align*}
   \phi_{0}(g, r, H)     &= g \\
   \phi_{n + 1}(g, r, H) &= (g, r, \lambda x.\lambda y.\phi_{n}(H(x, y))).
 \end{align*}
+Taking the diagram's limit, we obtain a type \(\ninverse{\infty}(f)\), together with data
+\begin{align*}
+  \psi_{n}   &: \ninverse{\infty}(f) \to \ninverse{n}(f) \\
+  \alpha_{n} &: \phi_{n + 1} \circ \psi_{n + 1} = \psi_{n}.
+\end{align*}
+
+\begin{proposition}
+  The type of \(\infty\)-invertibility proofs satisfies the recursive equation
+  \[\ninverse{\infty}(f) =
+    \sum_{g : B \to A}\sum_{r : \adj(f, g)}
+    \prod_{x : A}\prod_{y : B}\ninverse{\infty}(r(x, y))\]
+  for all \(f : A \to B\).
+\end{proposition}
+
+\begin{proof}
+  We obtain the desired equality by showing the second type satisfies the universal property
+  of the limit. Suppose then that \(P\) is a type, equipped with a cocone
+  \begin{align*}
+    \rho_{n}     &: P \to \ninverse{n}(f) \\
+    \beta_{n} &: \phi_{n + 1} \circ \rho_{n + 1} = \rho_{n}.
+  \end{align*}
+  TODO: not sure if this is a right approach.
+\end{proof}
+
 
 \end{document}
 
