@@ -18,7 +18,7 @@
 
 \newcommand{\id}{\mathrm{id}}
 \newcommand{\Id}{\mathrm{Id}}
-\newcommand{\isequiv}{\mathrm{equiv}}
+\newcommand{\isequiv}{\mathrm{isequiv}}
 \newcommand{\pr}{\mathrm{pr}}
 \newcommand{\refl}{\mathrm{refl}}
 \newcommand{\nsphere}[1]{\mathbb{S}^{#1}}
@@ -30,6 +30,7 @@
 \DeclareMathOperator{\inv}{Inv}
 \DeclareMathOperator{\inverse}{inverse}
 \DeclareMathOperator{\adj}{Adj}
+\DeclareMathOperator{\contr}{isContr}
 
 \newcommand{\ninverse}[1]{\inverse_{#1}}
 
@@ -145,6 +146,8 @@ We recall the following two important facts:
   universal property of the sphere.
 \end{proof}
 
+TODO: should this section be cut or be polished up to serve as motivation, introduction?
+
 \section{\(n\)-invertible maps}
 
 \begin{definition}
@@ -182,24 +185,21 @@ We recall the following two important facts:
 
 \begin{proposition}
   \label{ninv-id}
-  The type \(\ninverse{n + 1}(\id_{A})\) is equal to \(\prod_{x : A}\lspace{n + 1}(A, x)\)
+  The type \(\ninverse{n}(\id_{A})\) is equal to \(\prod_{x : A}\lspace{n}(A, x)\)
   for all~\(n : \N\).
 \end{proposition}
 
 \begin{proof}
-  We prove the result by induction on \(n\). We make use of the previous lemma in both cases.
+  We prove the result by induction on \(n\).
   For the base case, we have
-  \begin{align*}
-    \ninverse{1}(\id_{A}) &= \prod_{x, y : A}\ninverse{0}(\id_{x = y}) =
-                              \prod_{x, y : A} (x = y) \to (x = y) = \\
-                            &= \prod_{x : A} (x = x) = \prod_{x : A} \lspace{1}(A, x).
-  \end{align*}
+  \[\ninverse{0}(\id_{A}) = (A \to A) =
+    \prod_{x : A}(A, x) = \prod_{x : A}\lspace{0}(A, x).\]
   For the inductive step, we have
   \begin{align*}
-    \ninverse{n + 2}{(\id_{A})} &= \prod_{x, y : A}\ninverse{n + 1}(\id_{x = y}) =
-                                  \prod_{x, y : A}\prod_{p : x = y}\lspace{n + 1}(x = y, p) \\
-                                &= \prod_{x : A} \lspace{n + 1}(x = x, \refl_{x}) =
-                                  \prod_{x : A}\lspace{n + 2}(A, x).
+    \ninverse{n + 1}{(\id_{A})} &= \prod_{x, y : A}\ninverse{n}(\id_{x = y}) =
+                                  \prod_{x, y : A}\prod_{p : x = y}\lspace{n}(x = y, p) \\
+                                &= \prod_{x : A} \lspace{n}(x = x, \refl_{x}) =
+                                  \prod_{x : A}\lspace{n + 1}(A, x).
   \end{align*}
 \end{proof}
 
@@ -280,6 +280,32 @@ Taking the diagram's limit, we obtain a type \(\ninverse{\infty}(f)\), together 
   \psi_{n}   &: \ninverse{\infty}(f) \to \ninverse{n}(f) \\
   \alpha_{n} &: \phi_{n + 1} \circ \psi_{n + 1} = \psi_{n}.
 \end{align*}
+A function \(f\), equipped with data of type \(\ninverse{\infty}(f)\), is said to be
+\emph{\(\infty\)-invertible}.
+Note that every \(\infty\)-invertible function is an equivalence, since it is in particular
+\(1\)-invertible by the data of the limit.
+
+\begin{proposition}
+  The type \(\ninverse{\infty}(f)\) is a mere proposition for all functions \(f : A \to B\).
+\end{proposition}
+
+\begin{proof}
+  We show that assuming \(f\) is \(\infty\)-invertible, the type \(\ninverse{\infty}(f)\) is
+  contractible. That is to say, we wish to show
+  \[\prod_{A, B : \U}\prod_{f : A \to B}\ninverse{\infty}(f) \to
+    \contr(\ninverse{\infty}(f)).\]
+  Now, since \(\infty\)-invertibility implies equivalence, it suffices to show
+  \[\prod_{A, B : \U}\prod_{f : A \to B}\isequiv(f)
+    \to \contr(\ninverse{\infty}(\pr_{1}f)).\]
+  By equivalence induction, it then suffices to show only
+  \[\prod_{A : \U}\contr(\ninverse{\infty}(\id_{A})).\]
+  TODO: reword the above
+  
+  By definition, \(\ninverse{\infty}(\id_{A})\) is the limit of the diagram
+  \[\phi_{n} : \ninverse{n + 1}(\id_{A}) \to \ninverse{n}(\id_{A}).\]
+  TODO: we could now try to use Proposition \ref{ninv-id} somehow, this seems related to
+  the contractibility of \(\nsphere{\infty}\).
+\end{proof}
 
 \begin{proposition}
   The type of \(\infty\)-invertibility proofs satisfies the recursive equation
