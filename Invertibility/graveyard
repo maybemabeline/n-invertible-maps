@@ -1,0 +1,127 @@
+-- unfoldHasInverse∞ : ∀ {ℓ ℓ'} {A : Type ℓ} {B : Type ℓ'} {f : A → B} → hasInverse∞ f
+--                    → Σ[ g ∈ (B → A) ] Σ[ r ∈ (quasiAdjoint f g) ] (∀ (x : A) (y : B) → hasInverse∞ (r x y))
+-- unfoldHasInverse∞ (iso∞ e α) .fst = fst (e 1)
+-- unfoldHasInverse∞ (iso∞ e α) .snd .fst = fst (snd (e 1))
+-- unfoldHasInverse∞ {A = A} {B = B} {f = f} (iso∞ e α) .snd .snd x y = iso∞
+--   (λ { zero → H 0 x y ;
+--        (suc n) → lemma2 n (r zero x y) (funExt⁻ (sym (β' (suc n))) y) (H' n x y)})
+--   (λ { zero → {!!} ;
+--        (suc n) → {!!}}) where
+
+--   g : ∀ (n : ℕ) → B → A
+--   g zero = e zero
+--   g (suc n) = fst (e (suc n))
+
+--   r : ∀ (n : ℕ) → quasiAdjoint f (g (suc n))
+--   r n = fst (snd (e (suc n)))
+
+--   H : ∀ (n : ℕ) (x : A) (y : B) → (hasInverse n) (r n x y)
+--   H n = snd (snd (e (suc n)))
+
+--   α' : ∀ (n : ℕ) → _
+--   α' n = PathPΣ (α (suc n))
+
+--   β : ∀ (n : ℕ) → g (suc n) ≡ g n
+--   β zero = α 0
+--   β (suc n) = fst (α' n)
+
+--   β' : ∀ (n : ℕ) → g (suc n) ≡ g 1
+--   β' zero = refl
+--   β' (suc n) = β (suc n) ∙ β' n
+
+--   lemma : ∀ {u v : B → A} (r : quasiAdjoint f u) (K : u ≡ v) 
+--         → subst (λ h → quasiAdjoint f h) K r ≡ (λ x y p → r x y p ∙ funExt⁻ K y)
+--   lemma r = J
+--     (λ _ K → subst (λ h → quasiAdjoint f h) K r ≡ (λ x y p → r x y p ∙ funExt⁻ K y))
+--     (substRefl {B = (λ h → quasiAdjoint f h)} r ∙ funExt₃ λ x y p → rUnit (r x y p))
+
+--   γ : ∀ (n : ℕ) → (λ x y p → r (suc n) x y p ∙ funExt⁻ (β (suc n)) y) ≡ r n
+--   γ n = sym (lemma (r (suc n)) (β (suc n))) ∙ fromPathP (fst (PathPΣ (snd (α' n))))
+
+--   γ' : ∀ (n : ℕ) → (λ x y p → r (suc n) x y p ∙ funExt⁻ (β' (suc n)) y) ≡ r 0
+--   γ' zero = funExt₃ (λ x y p → cong (r 1 x y p ∙_) (sym (rUnit (funExt⁻ (β 1) y)))) ∙ γ zero
+--   γ' (suc n) =
+--     funExt₃ (λ x y p → (
+--       {!!} ∙ 
+--       assoc (r (suc (suc n)) x y p) (funExt⁻ (β (suc (suc n))) y) (funExt⁻ (β (suc n) ∙ β' n) y)) ∙ 
+--       cong (_∙ funExt⁻ (β (suc n) ∙ β' n) y) (λ i → γ (suc n) i x y p)) ∙
+--     γ' n
+
+--   H' : ∀ (n : ℕ) (x : A) (y : B) → (hasInverse (suc n)) (λ p → (r 0 x y p) ∙ funExt⁻ (sym (β' (suc n))) y)
+--   H' n x y = subst
+--     (λ s → (hasInverse (suc n)) s)
+--     (funExt (λ p →
+--       rUnit (r (suc n) x y p) ∙
+--       cong (r (suc n) x y p ∙_) (sym (rCancel (funExt⁻ (β' (suc n)) y))) ∙ 
+--       assoc (r (suc n) x y p) (funExt⁻ (β' (suc n)) y) (funExt⁻ (sym (β' (suc n))) y) ∙
+--       cong (_∙ funExtS⁻ (sym (β' (suc n))) y) λ i → γ' n i x y p))
+--     (H (suc n) x y)
+
+--   lemma2 : ∀ {ℓ} {C : Type ℓ} {x y z : A} (n : ℕ) (s : C → x ≡ y) (p : y ≡ z)
+--          → (hasInverse suc n) (λ c → s c ∙ p) → (hasInverse (suc n)) s
+--   lemma2 n s = J
+--     (λ _ p → (hasInverse suc n) (λ c → s c ∙ p) → (hasInverse (suc n)) s)
+--     (subst (λ h → (hasInverse (suc n)) h) (funExt (λ p → sym (rUnit (s p)))))
+
+----------------------------------------------------------------------------------
+
+unfoldHasInverse∞ record { hasInverseN = e ; coh = coh } .fst = fst (e 1)
+unfoldHasInverse∞ record { hasInverseN = e ; coh = coh } .snd .fst = fst (snd (e 1))
+-- unfoldHasInverse∞ {A = A} {B = B} {f = f} record { hasInverseN = e ; coh = coh } .snd .snd x y = record {
+--   hasInverseN = λ n → H' n x y ;
+--   coh = λ n i → α n i x y
+--   } where
+
+--   g : ∀ (n : ℕ) → B → A
+--   g zero = e zero
+--   g (suc n) = fst (e (suc n))
+  
+--   r : ∀ (n : ℕ) → quasiAdjoint f (g (suc n))
+--   r n = fst (snd (e (suc n)))
+  
+--   H : ∀ (n : ℕ) (x : A) (y : B) → (hasInverse n) (r n x y)
+--   H n = snd (snd (e (suc n)))
+
+--   γ : ∀ (n : ℕ) → (g (suc (suc n)) , r (suc n)) ≡ (g (suc n) , r n)
+--   γ n i = (fst (coh (suc n) i)) , (fst (snd (coh (suc n) i)))
+
+--   δ : ∀ (n : ℕ) → (g (suc n) , r n) ≡ (g 1 , r 0)
+--   δ zero = refl
+--   δ (suc n) = γ n ∙ δ n
+
+--   H' : ∀ (n : ℕ) (x : A) (y : B) → (hasInverse n) (r 0 x y)
+--   H' n =
+--     subst
+--       {A = Σ[ h ∈ (B → A) ] quasiAdjoint f h}
+--       (λ {(_ , s) → ∀ (x : A) (y : B) → (hasInverse n) (s x y)})
+--       (δ n)
+--       (H n)
+
+--   δ-filler : ∀ (n : ℕ) → PathP (λ i → ∀ (x : A) (y : B) → (hasInverse n) (snd (δ n i) x y)) (H n) (H' n)
+--   δ-filler n = subst-filler (λ {(_ , s) → ∀ (x : A) (y : B) → (hasInverse n) (s x y)}) (δ n) (H n)
+
+--   β : ∀ (n : ℕ)
+--     → PathP (λ i → ∀ (x : A) (y : B) → (hasInverse n) (snd ((sym (δ (suc n)) ∙ δ (suc n)) i) x y))
+--             (λ x y → dropInverse n (H' (suc n) x y))
+--             (H' n)
+--   β n =
+--     compPathP'
+--       {B = λ {(_ , s) → ∀ (x : A) (y : B) → (hasInverse n) (s x y)}}
+--       {p = sym (δ (suc n))}
+--       {q = δ (suc n)}
+--       (funExt₂ (λ x y → congP (λ i → dropInverse n) (λ i → symP (δ-filler (suc n)) i x y)))
+--       (compPathP'
+--         {B = λ {(_ , s) → ∀ (x : A) (y : B) → (hasInverse n) (s x y)}}
+--         {p = γ n}
+--         {q = δ n}
+--         (λ i → snd (snd (coh (suc n) i)))
+--         (δ-filler n))
+
+--   α : ∀ (n : ℕ) → (λ x y → dropInverse n (H' (suc n) x y)) ≡ (H' n)
+--   α n = subst
+--     (λ p → PathP
+--       (λ i → ∀ (x : A) (y : B) → (hasInverse n) (snd (p i) x y))
+--       (λ x y → dropInverse n (H' (suc n) x y))
+--       (H' n))
+--     (lCancel (δ (suc n)))
+--     (β n)

@@ -1,0 +1,4 @@
+name: invertibility-0.1
+include: .
+depend: cubical-0.7
+flags: --cubical --allow-unsolved-metas

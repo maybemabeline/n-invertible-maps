@@ -156,23 +156,39 @@ TODO: should this section be cut or be polished up to serve as motivation, intro
   Let \(f : A \to B\) be a function. We say that \(f\) is
   \(0\)-invertible if there exists a function \(g : B \to A\).
   We say that \(f\) is \((n + 1)\)-invertible if there exist functions \(g : B \to A\) and
-  \[r : \prod_{x : A}\prod_{y : B}(f(x) = y) \to (x = g(y)),\]
-  such that \(r(x, y)\) is \(n\)-invertible for all \(x\) and \(y\).
-
-  We thus define the type of \((n + 1)\)-inverses to be
-  \[\ninverse{n + 1}(f) =
-    \sum_{g : B \to A}\sum_{r : \adj(f, g)}
-    \prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)),\]
-  where \(\adj(f, g) = \prod_{x : A}\prod_{y : B}(f(x) = y) \to (x = g(y))\).
+  \[r : \adj(f, g) := \prod_{x : A}\prod_{y : B}(f(x) = y) \to (x = g(y)),\] such that
+  \(r(x, y)\) is \(n\)-invertible for all \(x\) and \(y\). We thus define a family of types
+  \(\ninverse{n}(f)\), such that
+  \(\ninverse{0}(f) = B \to A\) and
+  \[\ninverse{n + 1}(f) = \sum_{g : B \to A}\sum_{r : \adj(f, g)}
+    \prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)).\]
 \end{definition}
 
 \begin{remark}
-  We note that \(1\)-invertibility coincides with the ordinary notion of invertibility.
-  By path induction, the data of a \(1\)-invertible function \(f : A \to B\)
-  consists exactly of a function \(g : B \to A\), together with homotopies of type
-  \(\prod_{x : A} x = g(f(x))\) and \(\prod_{y : B} f(g(y)) = y\), witnessing
-  that \(f\) is invertible.
+  We note that the type \(\adj(f, g)\) is equal to \(\prod_{x : A}x = g(f(x))\) by path
+  induction, stating that \(g\) is a left inverse of \(f\). However, we want to keep the
+  type \(\adj(f, g)\) in its expanded form, so that we may speak about the invertibility
+  of the function \(f(x) = y \to x = g(y)\).
 \end{remark}
+
+\begin{lemma}
+  The notion of \(1\)-invertibility coincides with the ordinary notion
+  of invertibility. More precisely, the types \(\ninverse{1}(f)\) and
+  \(\inverse(f)\) are equal for all functions \(f\).
+\end{lemma}
+\begin{proof}
+  Let \(f : A \to B\) be a function. By definition, \(\ninverse{1}(f)\) is equal
+  to
+  \[\sum_{g : B \to A}\sum_{r : \adj(f, g)}\prod_{x : A}\prod_{y : B}\ninverse{0}(r(x,
+    y))\]
+  and \(\ninverse{0}(r(x, y))\) is equal to
+  \[(x = g(y)) \to (f(x) = y).\]
+  We thus obtain that \(\ninverse{1}(f)\) is equal to
+  \[\sum_{g : B \to A}\adj(f, g) \times \adj'(f, g),\]
+  where \(\adj'(f, g) = \prod_{x : A}\prod_{y : B}(x = g(y)) \to (f(x) = y)\). By applying
+  path induction to both \(\adj\) and \(\adj'\) as in the remark above, we se that gives
+  exactly the data of an invertible function.
+\end{proof}
 
 \begin{lemma}
   The type \(\ninverse{n + 1}(\id_{A})\) is equal to
@@ -245,9 +261,12 @@ TODO: should this section be cut or be polished up to serve as motivation, intro
   Let \(B : \U\) first be a type. Since \((n + 1)\)-invertibility implies equivalence and
   equivalence is a mere proposition, we have
   \[\sum_{f : A \to B}\ninverse{n + 1}(f) = \sum_{f : A \simeq B}\ninverse{n + 1}(\pr_{1}f).\]
-  Then, since the type \(\sum_{B : \U}{A \simeq B}\) is contractible, it follows that
+  Then, since the type \(\sum_{B : \U}{A \simeq B}\) is contractible onto \((A, \id_{A})\), we also have
   \[\sum_{B : \U}\sum_{f : A \simeq B}\ninverse{n + 1}(\pr_{1}f) =
-    \ninverse{n + 1}{(\id_{A})}.\]
+    \ninverse{n + 1}{(\id_{A})},\]
+  so we conclude that
+  \[\sum_{B : \U}\sum_{f : A \to B}\ninverse{n + 1}(f) = \ninverse_{n + 1}(\id_{A})\]
+  by transitivity.
   By proposition \ref{ninv-id}, the second type is equal to
   \(\prod_{x : A}\lspace{n + 1}(A, x)\). Finally, since dependent products commute with loop
   spaces, we have
@@ -270,13 +289,14 @@ TODO: should this section be cut or be polished up to serve as motivation, intro
 
 \section{\(\infty\)-invertible maps}
 
-Consider the diagram \(\phi_{n} : \ninverse{n + 1}(f) \to \ninverse{n}(f)\) defined
-in Proposition \ref{inverse-system}. We may explicitly define the \(\phi_{n}\) to be
+Consider the family of functions \(\phi_{n} : \ninverse{n + 1}(f) \to \ninverse{n}(f)\)
+defined in Proposition \ref{inverse-system}. These may explicitly be written out to be
 \begin{align*}
   \phi_{0}(g, r, H)     &= g \\
   \phi_{n + 1}(g, r, H) &= (g, r, \lambda x.\lambda y.\phi_{n}(H(x, y))).
 \end{align*}
-Taking the diagram's limit, we obtain a type \(\ninverse{\infty}(f)\), together with data
+Considering this family of function as a diagram and taking its limit, we obtain a type
+\(\ninverse{\infty}(f)\), together with data
 \begin{align*}
   \psi_{n}   &: \ninverse{\infty}(f) \to \ninverse{n}(f) \\
   \alpha_{n} &: \phi_{n + 1} \circ \psi_{n + 1} = \psi_{n}.
