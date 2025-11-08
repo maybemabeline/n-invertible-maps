@@ -1,0 +1,60 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage{amsthm}
+
+\newcommand{\refl}[1]{\mathsf{refl}_{#1}}
+\newcommand{\id}{\mathsf{id}}
+\newcommand{\inverse}{\mathsf{inverse}}
+\newcommand{\ninverse}[1]{\inverse_{#1}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\DeclareMathOperator{\adj}{Adj}
+
+\DeclarePairedDelimiter{\p}{(}{)}
+
+\begin{document}
+
+Define \[\adj(f, g) := \prod_{x : A}\prod_{y : B}\p{f(x) = y} \to \p{x = g(y)}.\] Suppose
+that \(g\) is a left inverse of \(f\), witnessed by \(G : g \circ f \sim \id_{A}\). We then
+construct \(r_{G} : \adj(f, g)\), given by induction by
+\[r_{G}(x, f(x), \refl{f(x)}) = H(x).\] This map induces an equivalence between
+\(g \circ f \sim \id_{A}\) and \(\adj(f, g)\)
+
+Now, suppose that the type of left inverses of a function \(f\)
+\[\sum_{g : B \to A}g \circ f \sim \id_{A}\]
+is contractible onto \(\p{h, H}\).
+By applying the equivalence between
+\(g \circ f \sim \id_{A}\) and \(\adj(f, g)\), we then obtain that the type
+\[\sum_{g : B \to A}\adj(f, g)\]
+is contractible onto \(\p{h, r_{H}}\).
+
+Consider the identity function \(\id_{A}\). Its type of left inverses is contractible onto
+\(\p{\id_{A}, \lambda x. \refl{x}}\).
+It then follows that the type
+\[\sum_{g : A \to A}\adj(\id_{A}, g)\]
+is contractible onto \(\p{\id_{A}, r_{\lambda x. \refl{x}}}\). We now claim that
+\(r_{\lambda x. \refl{x}}\) is equal to \(\lambda x y. \id_{x = y}\). By function
+extensionality, it suffices to show that \[r_{\lambda x. \refl{x}}(x, y, p) = p\] for all
+\(x, y : A\) and \(p : x = y\). By path induction, it then suffices to show that
+\[r_{\lambda x. \refl{x}}(x, x, \refl{x}) = \refl{x}\] for all \(x : A\), but this then
+follows by definiton of \(r\).
+We conclude that \(\sum_{g : A \to A}\adj(\id_{A}, g)\) is contractible onto
+\(\p{\id_{A}, \lambda x y. \id_{x = y}}\).
+
+With this, we can now show that \(\ninverse{n + 1}(\id_{A})\) is equal to \(\prod_{x y : A}\ninverse{n}(\id_{x = y})\).
+Unfolding \(\ninverse{n + 1}\), we see that
+\[\ninverse{n + 1}(\id_{A}) = \sum_{g : A \to A}\sum_{r : \adj(\id_{A}, g)}\prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)).\]
+The result then follows by reassociating the sigma types and applying the above
+contractibility result.
+\end{document}
+
+%%% Local Variables:
+%%% mode: LaTeX
+%%% TeX-master: t
+%%% End:
