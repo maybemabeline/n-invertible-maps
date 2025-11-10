@@ -7,6 +7,7 @@
 \newcommand{\id}{\mathsf{id}}
 \newcommand{\inverse}{\mathsf{inverse}}
 \newcommand{\ninverse}[1]{\inverse_{#1}}
+\newcommand{\tr}{\mathsf{tr}}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
@@ -47,11 +48,52 @@ follows by definiton of \(r\).
 We conclude that \(\sum_{g : A \to A}\adj(\id_{A}, g)\) is contractible onto
 \(\p{\id_{A}, \lambda x y. \id_{x = y}}\).
 
-With this, we can now show that \(\ninverse{n + 1}(\id_{A})\) is equal to \(\prod_{x y : A}\ninverse{n}(\id_{x = y})\).
+With this, we can now show that \(\ninverse{n + 1}(\id_{A})\) is equal to \(\prod_{x, y : A}\ninverse{n}(\id_{x = y})\).
 Unfolding \(\ninverse{n + 1}\), we see that
 \[\ninverse{n + 1}(\id_{A}) = \sum_{g : A \to A}\sum_{r : \adj(\id_{A}, g)}\prod_{x : A}\prod_{y : B}\ninverse{n}(r(x, y)).\]
 The result then follows by reassociating the sigma types and applying the above
 contractibility result.
+\pagebreak
+
+In the formalisation I actually obtain the contractibility result by a more direct
+computational argument, but I thought the above may be be nicer for a paper proof. As in
+the formalisation though, we can directly show that the type
+\[\sum_{g : A \to A}\adj(\id_{A}, g)\]
+is contractible onto \(\p{\id_{A}, \lambda x y. \id_{x = y}}\) in the following way:
+
+We first characterise identifications in the above sigma type. To give an identification
+between \(\p{g, r}\) and \(\p{h, s}\), we claim that it is sufficient to give a homotopy
+\(H : g \sim h\) and a witness to the commutative triangle
+\[r(x, y, p) \cdot H(y) = s(x, y, p)\] for all \(x, y : A\) and \(p : x = y\). The claim
+follows by first applying homotopy induction on \(H\) and then noting that the
+commutativity data turns into just a homotopy between \(r\) and \(s\), on which we may
+again apply homotopy induction.
+
+Now let \(\p{g, r}\) be an arbitrary element of the above sigma type. Then
+\[r : \prod_{x, y : A} (x = y) \to (x = g(y)),\] so \(\lambda x. r(x, x, \refl{x})\) gives
+a homotopy between \(\id_{A}\) and \(g\). To give an identification between
+\(\p{\id_{A}, \lambda x y. \id_{x = y}}\) and \(\p{g, r}\), the characterisation now tells
+us that it is sufficient to give an identification of type
+\[p \cdot r(y, y, \refl{y}) = r(x, y, p)\]
+for all \(x, y : A\) and \(p : x = y\). This is then discharged by path induction on \(p\).
+
+Let me now turn to a potentially interesting thread, related to \(\infty\)-invertibility.
+Taking the coinductive definition of \(\infty\)-invertibility, we can unfold
+\(\ninverse{\infty}(\id_{A})\) once to obtain
+\[\ninverse{\infty}(\id_{A}) = \sum_{g : A \to A}\sum_{r : \adj(\id_{A}, g)}\prod_{x :
+    A}\prod_{y : B}\ninverse{\infty}(r(x, y)).\] As in the proof that
+\(\ninverse{n + 1}(\id_{A}) = \prod_{x, y : A} \ninverse{n}(\id_{x = y})\), we now obtain
+that \(\ninverse{\infty}(\id_{A}) = \prod_{x, y : A} \ninverse{\infty}(\id_{x = y})\).
+
+Now, the start of the proof of proposition 17 from the paper tells us that to show that
+\(\ninverse{\infty}(f)\) is a proposition for all functions \(f\), it suffices to show
+that \(\ninverse{\infty}(\id_{A})\) is contractible.
+To understand \(\infty\)-invertibility, it thus seems crucial to understand the
+\(\infty\)-invertible structure of the identity function and by the above, this obeys the
+following curious recursive equation:
+
+Define \(F(A) = \ninverse{\infty}(\id_{A})\). Then \(F(A) = \prod_{x, y : A}F(x = y)\).
+Is there anything we can extract from this fact by itself?
 \end{document}
 
 %%% Local Variables:
